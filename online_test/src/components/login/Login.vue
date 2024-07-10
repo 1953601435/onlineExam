@@ -10,46 +10,49 @@
       <el-input v-model="password" prefix-icon="el-icon-lock" placeholder="请输入密码" auto-complete="new-password" show-password></el-input>
     </div>
     <div class="input">
-      <el-button @click="login" style="width:500px" type="primary" :disabled="disabled">登录</el-button>
+      <el-button @click="login" style="width:240px" type="primary" :disabled="disabled">登录</el-button>
+      <el-button @click="goToRegister" style="width:240px" type="primary">注册</el-button>
     </div>
   </div>
 </template>
 
 <script>
-import Storage from '../../tools/Storage'
+import axios from 'axios';
 import { ElMessage } from 'element-plus';
 
 export default {
-  name:"Login",
+  name: "Login",
   data() {
     return {
-      name:"",
-      password:""
+      name: "",
+      password: ""
     }
   },
-  mounted () {
-    this.name = ""
-    this.password = ""
-  },
   computed: {
-    disabled(){
+    disabled() {
       return this.name.length == 0 || this.password.length == 0;
     }
   },
   methods: {
-    login() {
-      Storage.commit("registUserInfo",{
-        name:this.name,
-        password:this.password
-      })
-      ElMessage({
-        message:'登录成功',
-        type:'success',
-        duration:1500
-      })
-      setTimeout(() => {
-        this.$router.push({name:"home"})
-      }, 1500);
+    async login() {
+      try {
+        const response = await axios.post('/api/users/login', {
+          username: this.name,
+          password: this.password
+        });
+        if (response.data) {
+          // 登录成功，处理响应
+          this.setUserInfo({ name: this.name, password: this.password });
+          this.$router.push('/home'); // 重定向到主页或其他页面
+        } else {
+          ElMessage.error("用户名或密码错误");
+        }
+      } catch (error) {
+        ElMessage.error("用户名或密码错误");
+      }
+    },
+    goToRegister() {
+      this.$router.push("/register");
     }
   }
 }
@@ -74,5 +77,4 @@ export default {
   margin: 20px auto;
   width: 500px;
 }
-
 </style>

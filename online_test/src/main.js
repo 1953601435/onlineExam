@@ -6,6 +6,9 @@ import App from './App.vue'
 import ElementPlus from 'element-plus'
 // 引入CSS样式
 import 'element-plus/dist/index.css'
+import axios from 'axios'; // 修正引入axios
+axios.defaults.baseURL = 'http://localhost:8080'; // 后端地址
+
 // 引入图标
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 const app = createApp(App)
@@ -14,6 +17,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     // 向应用实例中全局注册图标组件
     app.component(key, component)
 }
+app.config.globalProperties.$axios = axios; // 将axios添加到Vue实例
 app.use(ElementPlus)
 
 app.use(Router)

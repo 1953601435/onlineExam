@@ -1,10 +1,9 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
-import Login from '../components/login/Login.vue'
-import Home from '../components/home/Home.vue'
-
-import DataCom from '../components/financial/DataCom.vue'
-import Store from '../tools/Storage'
-
+import { createRouter, createWebHashHistory } from 'vue-router';
+import Login from '../components/login/Login.vue';
+import Register from '../components/register/Register.vue'; // 添加Register.vue的引入
+import Home from '../components/home/Home.vue';
+import DataCom from '../components/financial/DataCom.vue';
+import Store from '../tools/Storage';
 import ExamResult from "@/components/exam/ExamResult.vue";
 import ExamSelection from "@/components/exam/ExamSelection.vue";
 import Exam from "@/components/exam/Exam.vue";
@@ -14,23 +13,27 @@ import StudentManagement from "@/components/student/StudentManagement.vue";
 import EditQuestion from "@/components/question/EditQuestion.vue";
 
 const Router = createRouter({
-    history:createWebHashHistory(),
-    routes:[
+    history: createWebHashHistory(),
+    routes: [
         {
-            path:'/login',
-            component:Login,
-            name:"login"
+            path: '/login',
+            component: Login,
+            name: "login"
         },
         {
-            path:'/home',
-            component:Home,
-            name:"home",
-            children:[
-
+            path: '/register', // 添加注册页面路由
+            component: Register,
+            name: "register"
+        },
+        {
+            path: '/home',
+            component: Home,
+            name: "home",
+            children: [
                 {
-                    path:'data',
-                    component:DataCom,
-                    name:'DataCom'
+                    path: 'data',
+                    component: DataCom,
+                    name: 'DataCom'
                 },
                 {
                     path: 'exam-selection',
@@ -71,19 +74,18 @@ const Router = createRouter({
                     props: true
                 }
             ],
-            redirect:'/home/student'
+            redirect: '/home/student'
         }
     ]
-})
+});
 
-Router.beforeEach((from) => {
+Router.beforeEach((to) => {
     let isLogin = Store.getters.isLogin;
-    if (isLogin || from.name === 'login') {
+    if (isLogin || to.name === 'login' || to.name === 'register') { // 允许访问注册页面
         return true;
     } else {
-        return {name: 'login'}
+        return { name: 'login' };
     }
-    
-})
+});
 
 export default Router;
