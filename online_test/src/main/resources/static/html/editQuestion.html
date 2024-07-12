@@ -163,7 +163,8 @@
     function submitForm() {
         form.category = document.getElementById('category').value;
         form.type = document.querySelector('input[name="type"]:checked').value;
-        form.question = JSON.stringify(document.getElementById('question').value);
+        //form.question = JSON.stringify(document.getElementById('question').value);
+        form.question = document.getElementById('question').value;
         form.correctAnswer = document.getElementById('correctAnswer').value;
 
         const options = {};
